@@ -6,9 +6,14 @@ import jwt from "jsonwebtoken";
 
 connect();
 
+interface ReqBody {
+  email: string;
+  password: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const reqBody = await request.json();
+    const reqBody: ReqBody = await request.json();
 
     const { email, password } = reqBody;
 
@@ -54,12 +59,9 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  } catch (error) {
     return NextResponse.json(
-      { error: "An unexpected error occurred" },
+      { error: (error as Error).message },
       { status: 500 }
     );
   }
